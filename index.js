@@ -1,14 +1,30 @@
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config();
+}
+
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const ejsMate = require("ejs-mate");
+const joi = require("joi");
 const methodOverride = require("method-override");
-const Campground = require("./models/campground");
+const expressError = require("./utilities/expressError");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+
+const campgroundRoutes = require("./routes/campgrounds");
+const reviewRoutes = require("./routes/reviews");
+const userRoutes = require("./routes/user");
+const User = require("./models/user");
+const mongoSanitize = require("express-mongo-sanitize");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
+	useFindAndModify: false,
 });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -24,6 +40,37 @@ app.engine("ejs", ejsMate);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
+app.use(mongoSanitize());
+
+const sessionCofig = {
+	secret: "mysteriousStuff",
+	resave: false,
+	saveUninitialized: true,
+	cookie: {
+		httpOnly: true,
+		expires: Date.now() + 3000,
+		maxAge: 3000,
+	},
+};
+app.use(session(sessionCofig));
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+	res.locals.success = req.flash("success");
+	res.locals.error = req.flash("error");
+	next();
+});
+
+app.use("/campgrounds", campgroundRoutes);
+app.use("/campgrounds/:id/reviews", reviewRoutes);
+app.use("/", userRoutes);
 
 //For going to the main page
 app.get("/", (req, res) => {
@@ -31,48 +78,15 @@ app.get("/", (req, res) => {
 	res.render("home");
 });
 
-//For the page that displays all the campgrounds in the database
-app.get("/campgrounds", async (req, res) => {
-	const campgrounds = await Campground.find({});
-	res.render("campgrounds/index", { campgrounds });
+app.all("*", (req, res, next) => {
+	next(new expressError("Bleep! PAGE NOT FOUND", 404));
 });
 
-//For the page that lets us enter information about a new campground
-app.get("/campgrounds/new", (req, res) => {
-	res.render("campgrounds/new");
-});
-
-//From the new page, to save new data to database
-app.post("/campgrounds", async (req, res) => {
-	const campground = new Campground(req.body.campground);
-	await campground.save();
-	res.redirect(`/campgrounds/${campground._id}`);
-});
-
-//For the page that shows details on one single campground
-app.get("/campgrounds/:id", async (req, res) => {
-	const campground = await Campground.findById(req.params.id);
-	//console.log(campground);
-	res.render("campgrounds/show", { campground });
-});
-
-app.get("/campgrounds/:id/edit", async (req, res) => {
-	const campground = await Campground.findById(req.params.id);
-	console.log(campground);
-	res.render("campgrounds/edit", { campground });
-});
-
-app.put("/campgrounds/:id", async (req, res) => {
-	const campground = await Campground.findByIdAndUpdate(req.params.id, {
-		...req.body.campground,
-	});
-	console.log(campground);
-	res.redirect(`/campgrounds/${campground._id}`);
-});
-
-app.delete("/campgrounds/:id", async (req, res) => {
-	await Campground.findByIdAndDelete(req.params.id);
-	res.redirect(`/campgrounds`);
+app.use((err, req, res, next) => {
+	const { statusCode = 500 } = err;
+	if (!err.message) err.message = "Mayday!";
+	console.log(err);
+	res.status(statusCode).render("campgrounds/error", { err }); //(message);
 });
 
 app.listen(3000, () => {

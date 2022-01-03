@@ -1,0 +1,15 @@
+<% layout('layout/boilerplate') %>
+    <h1>Login</h1>
+    <form action="/login" method="POST" class="val-form" novalidate>
+        <div class="mb-3">
+            <label class="form-label" for="username">Enter your username:</label>
+            <input type="text" name="username" id="username" placeholder="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="password">Enter your password:</label>
+            <input type="password" name="password" id=password" placeholder="****" class="form-control" required>
+        </div>
+        <div class="d-grid gap-2">
+            <button class="btn btn-success btn-sm btn-block">Login</button>
+        </div>
+    </form>
