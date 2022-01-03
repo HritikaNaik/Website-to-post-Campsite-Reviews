@@ -27,6 +27,7 @@ const seedBD = async () => {
 			description:
 				"Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla obcaecati ut facere, recusandae accusamus officia sit ab necessitatibus, enim, quasi nihil? Unde, consequatur voluptates placeat doloribus minima id quam repellat? Cum voluptate quos mollitia illo adipisci, molestias sunt accusamus? Quo voluptate soluta explicabo, quisquam praesentium provident ut quia voluptatibus facilis. Ab veniam neque quis enim pariatur vero qui laudantium illo? Eveniet autem repudiandae facilis dolorem ratione non obcaecati voluptatum dolore ea odit, minima nemo eos aliquid sit laboriosam praesentium. Quisquam voluptate magnam iusto quasi, debitis animi! Doloribus inventore odio unde!",
 			price: price,
+			author: "61cde456a41c71682d77360c",
 		});
 		await camp.save();
 	}

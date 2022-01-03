@@ -3,32 +3,40 @@
         <div class="row">
                 <h1 class='text-center'>New Campground</h1>
                 <div class="col-6 offset-3">
-                        <form action="/campgrounds" method="POST">
+                        <form action="/campgrounds" method="POST" class="val-form" novalidate enctype="multipart/form-data">
                                 <div class="mb-3">
                                         <label class="form-label" for="title">Enter title</label>
-                                        <input type="text" name="campground[title]" id="title"
-                                                placeholder="campground title" class="form-control">
+                                        <input type="text" name="campground[title]" id="title" placeholder="campground title" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
                                         <label class="form-label" for="location">Enter location: (town, state)</label>
-                                        <input type="text" name="campground[location]" id="location"
-                                                placeholder="campground location" class="form-control">
+                                        <input type="text" name="campground[location]" id="location" placeholder="campground location" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
-                                        <label class="form-label" for="location">Enter location: (town, state)</label>
-                                        <input type="text" name="campground[location]" id="location"
-                                                placeholder="campground location" class="form-control">
+                                        <label class="form-label" for="picture">Enter image url:</label>
+                                        <input type="text" name="campground[image]" id="picture" placeholder="https://www." class="form-control" required>
                                 </div>
                                 <div class="mb-3">
-                                        <label class="form-label" for="location">Enter location: (town, state)</label>
-                                        <input type="text" name="campground[location]" id="location"
-                                                placeholder="campground location" class="form-control">
+                                        <label class="form-label" for="price">Enter price:</label>
+                                        <div class="input-group">
+                                                <span class="input-group-text info">$</span>
+                                                <input type="text" class="form-control" name="campground[price]" id="price" placeholder="0" required>
+                                                <!-- <span class="input-group-text info">.00</span> -->
+                                        </div>
+                                </div>
+                                <div class="mb-3">
+                                        <label class="form-label" for="description">Enter site description:</label>
+                                        <textarea name="campground[description]" id="description" placeholder="Draco dormiens nunquam titillandus" class="form-control" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                        <label class="form-label" for="images">Upload photos:</label>
+                                        <input type="file" name="campground[images]" id="images" class="form-control">
                                 </div>
                                 <div class="d-grid gap-2">
                                         <button class="btn btn-info btn-sm btn-block">Submit</button>
                                 </div>
                         </form>
 
-                        <a href="/campgrounds"><button class="btn btn-outline-warning m-3">Back</button></a>
+                        <a href="/campgrounds"><button class="btn btn-outline-dark g m-3">Back</button></a>
                 </div>
         </div>

@@ -7,15 +7,17 @@
         </div>
         <% for (let c of campgrounds) {%>
                 <div class="card mb-3">
-                        <div class="row">
-                                <div class="col-md-4">
-                                        <img class="img-fluid" alt="" src="<%= c.image %> ">
+                        <div class="row d-flex align-items-center">
+                                <div class="col-md-4 ">
+                                        <div class=" ratio ratio-16x9">
+                                                <img class="img-fluid img-thumbnail" alt="" src="<%= c.image %> ">
+                                        </div>
                                 </div>
-                                <div class="col-md-8">
-                                        <div class="card-body">
-                                                <h5 class="card-title">
+                                <div class="col-md-6 ">
+                                        <div class="card-body ">
+                                                <h3 class="card-title">
                                                         <%= c.title %>
-                                                </h5>
+                                                </h3>
                                                 <!-- <p class="card-text">
                                                                  <%= c.description %> 
                                                         </p> -->
@@ -24,10 +26,14 @@
                                                                 <%= c.location %>
                                                         </small>
                                                 </p>
-                                                <a href="/campgrounds/<%= c._id %> " class="btn  btn-danger">View
-                                                        Details</a>
+                                                <div class="d-flex justify-content-center">
+                                                        <a href="/campgrounds/<%= c._id %> "
+                                                                class="btn  btn-sm btn-danger">View
+                                                                Details</a>
+                                                </div>
                                         </div>
                                 </div>
                         </div>
+                </div>
                 </div>
                 <% } %>
